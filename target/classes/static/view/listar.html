@@ -1,0 +1,25 @@
+	<div class="col-xs-12">
+		<div class="col-xs-12 table-responsive">
+			
+			<table class="table table-striped" cellspacing="0" cellpadding="0">
+				<thead>
+					<tr>
+						<th>Matricula</th>
+						<th>Nome</th>
+						<th >Estado Civil</th>
+						<th >Curso</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="aluno in alunos">
+						<td>{{aluno.matricula}}</td>
+						<td>{{aluno.nome}}</td>
+						<td>{{aluno.estadoCivil}}</td>
+						<td>{{aluno.curso.nome}}</td>
+					<tr>
+
+					
+				</tbody>
+			</table>
+		<a href="#!/"><button class="btn btn-primary" type="button">Voltar</button></a> 
+		</div>

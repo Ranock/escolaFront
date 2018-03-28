@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html ng-app="escolaFront">
+<head>
+	<title>Inserindo aluno</title>
+	<link rel="stylesheet" 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script type="text/javascript" src="js/angular.js"></script>
+	<script type="text/javascript" src="js/angular-route.js"></script>
+	<script type="text/javascript">
+		var app = angular.module("escolaFront", ["ngRoute"]);
+		app.controller("alunoCtrl", function($scope, $http, $location){
+			$scope.aluno = {};
+			$scope.cursos = {};
+			$scope.alunos = {};
+			$scope.cadastrarAluno = function(aluno){
+				console.log(aluno);
+				if(verificarCampos(aluno)){
+					$http.post("http://localhost:8081/aluno/cadastro", aluno ).then(function(data){
+						$location.path("/listar")
+						carregarAlunos();
+						alert("Aluno cadastrado");		
+						$scope.aluno = {};			
+					}).catch(function(data){
+						alert("erro ao cadastrar");
+					})
+				}
+			};
+			var carregarCursos = function(){
+				$http.get("http://localhost:8081/aluno/cursos").then(function(data){
+					$scope.cursos = data.data;
+				}).catch(function(data){
+					alert("erro ao carregar");
+				})
+			}
+
+			var carregarAlunos = function(){
+				$http.get("http://localhost:8081/aluno/alunos").then(function(data){
+					$scope.alunos = data.data;
+				}).catch(function(data){
+					alert("erro ao carregar");
+				})
+			}
+					
+			var verificarCampos = function(aluno){
+				var erro = false;
+				var nome = aluno.nome;
+				if((aluno.matricula < 1) || (aluno.matricula > 9999)){
+					alert("Matricula fora do intervalo (1, 9999)");
+					erro = true;
+				}
+				if((aluno.nome == null ) || (aluno.nome == undefined ) || (aluno.nome == "")){
+					alert("Nome n? pode ser vazio");
+					erro = true;
+				}
+				if(nome.length < 51){
+					alert("Nome do aluno precisa ser maior que 51 digitos");
+					erro = true;
+				}
+				if((aluno.curso == null) || (aluno.curso == undefined) || (aluno.curso == "")){
+					alert("Curso precisa ser preenchido");
+					erro = true;
+				}
+				return !(erro);
+			}
+
+	
+	carregarCursos();	
+	carregarAlunos();
+		});
+
+		app.config(function($routeProvider, $locationProvider){
+			$routeProvider.when("/",{
+				templateUrl:'view/cadastro.html'
+			});
+			$routeProvider.when("/listar",{
+				templateUrl:'view/listar.html'
+			});
+		});
+	</script>
+</head>
+<body ng-controller="alunoCtrl">
+	
+
+	<div class="container">
+		<div ng-view="ng-view"></div>
+	</div>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+		integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+		integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+		integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+		crossorigin="anonymous"></script>
+
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
